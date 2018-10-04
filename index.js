@@ -98,7 +98,7 @@ app.get('/category/:_id',(req,res) => {
 });
 
 //------------------get list of categories------------------->
-app.get('/category',(req,res) => {
+app.get('/categories',(req,res) => {
     const category = Category.find()
     .then(category => {
         if(!category) {

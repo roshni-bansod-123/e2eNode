@@ -1,6 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+let utils = require('./utils/Utils.js');
+const conString = utils.getProperty('mongo_connect_url');
+let user_registration_api = require('./apis/UserRegistrationAPI.js');
+let contact_us_api = require('./apis/ContactUsAPI.js')
+
+
 
 // read from properties file
 const PropertiesReader = require('properties-reader'); 
@@ -13,22 +19,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(__dirname))
 
-// -------------- utils ------------------>
-
-getProperty = (pty) => {
-  return prop.get(pty);
-}
-const conString = getProperty('mongo_connect_url');
-
-generateResponse = (status,errorCode,errorDesc) => {
-  var respObj = {};
-  respObj.status = status;
-  respObj.errorCode = errorCode;
-  respObj.errorDesc = errorDesc;
-
-  return respObj;
-
-}
 
 mongoose.connect(conString,{ useNewUrlParser: true })
 .then(() => console.log('Connected to MongoDb..'))
@@ -39,11 +29,12 @@ mongoose.connect(conString,{ useNewUrlParser: true })
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
   next();
 });
 
 // -------------- server port listener ------------------>
-app.listen(getProperty('server.port'), () => {
+app.listen(utils.getProperty('server.port'), () => {
   console.log("Well done, now I am listening...")
 })
 
@@ -66,7 +57,7 @@ app.post('/create/category',(req,res,next) => {
       category 
       .save()
       .then(result => res.status(200).json({
-        errorCode:getProperty('success'),
+        errorCode:utils.getProperty('success'),
         categoryDetails: category
     }))
       .catch(err => {
@@ -86,7 +77,7 @@ app.get('/category/:_id',(req,res) => {
             });            
         }
         res.status(200).json({
-            errorCode:getProperty('success'),
+            errorCode:utils.getProperty('success'),
             categoryDetails: category
         })
     })
@@ -107,7 +98,7 @@ app.get('/categories',(req,res) => {
             });            
         }
         res.status(200).json({
-            errorCode:getProperty('success'),
+            errorCode:utils.getProperty('success'),
             categoryDetails: category
         })
     })
@@ -128,7 +119,7 @@ app.put('/update/category/:_id',(req,res) => {
             });            
         }
         res.status(200).json({
-            errorCode:getProperty('success'),
+            errorCode:utils.getProperty('success'),
             categoryDetails: category
         })
     })
@@ -149,3 +140,32 @@ app.delete('delete/category/:_id',(req,res) => {
         });
     })
 });
+
+
+// -------------- post user registration ------------------>
+
+app.post(utils.getProperty('user_registration_url'),function(req,res){
+    if(!req.body){
+        return res.status(400).send({
+            message: "Data cannot be empty"
+        });
+    }
+    user_registration_api.dupCheck(req,res);
+})
+
+// -------------- put contact registration ------------------>
+
+app.put(utils.getProperty('contact_us_url'),function(req,res){
+    if(!req.body){
+        return res.status(400).send({
+            message: "Data cannot be empty"
+        });
+    }
+    contact_us_api.contactQuery(req,res);
+})
+
+
+// -------------- ping service ------------------>
+app.get('/',function(req,res){
+    res.send("Hello");
+})

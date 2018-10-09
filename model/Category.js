@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema({
-    _id : mongoose.Schema.Types.ObjectId,
+    categoryId : mongoose.Schema.Types.ObjectId,
     category : String,
     createdDate : Date,
-    updatedDate : Date
+    updatedDate : Date,
+    categoryImage : String
+
 });
 
 const Category = mongoose.model('Category',categorySchema,'categories_collection');

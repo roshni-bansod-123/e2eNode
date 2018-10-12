@@ -26,6 +26,6 @@ const contact_us = new mongoose.Schema({
         type: String,
         default: 'Open'
     }
-})
-const Contactus = mongoose.model('Contact_Us',contact_us);
+});
+const Contactus = contact_us;
 module.exports  = Contactus;

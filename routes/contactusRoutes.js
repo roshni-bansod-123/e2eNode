@@ -6,7 +6,7 @@ const contactusController = require('../controller/contactusController');
 
 
 //-------------------- Create new category ---------------------->
-router.post('/user/contactus', contactusController.contactQuery);
+router.put('/user/contactus', contactusController.contactQuery);
 
 
 module.exports = router;

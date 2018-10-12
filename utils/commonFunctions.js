@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 let Grid = require('gridfs-stream');
 Grid.mongo = mongoose.mongo;
 let gfs= null;
-
+let connection=null;
 exports.getProperty = (pty) => {
     return prop.get(pty);
   }
@@ -22,12 +22,16 @@ exports.generateResponse = (status,errorCode,errorDesc) => {
 
 exports.createDBConnection = () => {
     const conString = exports.getProperty('mongo_connect_url');
-    let connection = mongoose.createConnection(conString,{ useNewUrlParser: true });
+    connection = mongoose.createConnection(conString,{ useNewUrlParser: true });
     connection.once('open', function () {
         gfs = Grid(connection.db);
     });
 };
 
+exports.getConnection = () => {
+    return connection;
+};
+
 exports.getGfs = () => {
      return gfs;
-}
+};

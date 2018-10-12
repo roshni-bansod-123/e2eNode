@@ -1,16 +1,7 @@
 
 const utils = require('../utils/commonFunctions');
-//const mongoose = require('mongoose');
 let multer = require('multer');
-//let Grid = require('gridfs-stream');
 let GridFsStorage = require('multer-gridfs-storage');
-//Grid.mongo = mongoose.mongo;
-//const conString = utils.getProperty('mongo_connect_url');
-//let connection = mongoose.createConnection(conString,{ useNewUrlParser: true });
-//let gfs= utils.getGfs();
-/*connection.once('open', function () {
-    gfs = Grid(connection.db);
-});*/
 let storage = GridFsStorage({
     url: utils.getProperty('mongo_connect_url'),
     file: (req, file) => {

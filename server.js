@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 
 let app = express();
 
-const Utils = require('./utils/commonFunctions');
+const utils = require('./utils/commonFunctions');
 
 // -------------- filter for cross-origin ------------------>
 app.use(function(req, res, next) {
@@ -32,13 +32,12 @@ const FileUploadRoutes = require('./routes/fileuploadRoutes');
 app.use('/file',FileUploadRoutes);
 
 // ----------------- mongoDb connection -------------------->
-const conString = Utils.getProperty('mongo_connect_url');
-let connection = mongoose.createConnection(conString,{ useNewUrlParser: true });
 
+utils.createDBConnection();
 
 
 // -------------- server port listener ------------------>
-app.listen(Utils.getProperty('server.port'), () => {
+app.listen(utils.getProperty('server.port'), () => {
   console.log("Well done, now I am listening...")
 });
 

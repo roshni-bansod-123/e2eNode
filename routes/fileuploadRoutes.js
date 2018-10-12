@@ -10,6 +10,6 @@ router.post('/upload',fileUploadController.checkDuplicate);
 //----------------- find file by name ------------------>
 router.get('/:filename',fileUploadController.findFileByName);
 
-router.get('/getallfiles',fileUploadController.getAllFiles);
+router.get('/get/allfiles',fileUploadController.getAllFiles);
 
 module.exports = router;

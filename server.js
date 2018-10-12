@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 let app = express();
+
 const Utils = require('./utils/commonFunctions');
 
 // -------------- filter for cross-origin ------------------>
@@ -27,16 +28,19 @@ app.use('/categoryroutes',CategoryRoutes);
 const ContactusRoutes = require('./routes/contactusRoutes');
 app.use('/contactusroutes',ContactusRoutes);
 
+const FileUploadRoutes = require('./routes/fileuploadRoutes');
+app.use('/file',FileUploadRoutes);
+
 // ----------------- mongoDb connection -------------------->
 const conString = Utils.getProperty('mongo_connect_url');
-mongoose.connect(conString,{ useNewUrlParser: true })
-.then(() => console.log('Connected to MongoDb..'))
-.catch(err => console.log("Could not connect to MongoDb..", err));
+let connection = mongoose.createConnection(conString,{ useNewUrlParser: true });
+
 
 
 // -------------- server port listener ------------------>
 app.listen(Utils.getProperty('server.port'), () => {
   console.log("Well done, now I am listening...")
 });
+
 
 

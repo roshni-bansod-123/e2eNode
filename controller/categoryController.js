@@ -12,7 +12,8 @@ exports.createCategory = (req, res) => {
     }
 
     //Create and save category in DB
-    const category = new Category({
+    const cat = Utils.getConnection().model('Category',Category,'categories_collection');
+    const category = new cat({
         categoryId: new mongoose.Types.ObjectId,
         category: req.body.category,
         createdDate: new Date,
@@ -29,11 +30,11 @@ exports.createCategory = (req, res) => {
             message: err.message || "Some error occurred while creating category."
         }); 
     });
-}
+};
 
 //------------------Get category details--------------------->
 exports.findAllCategories = (req, res) => {
-    const category = Category.find()
+    Category.find()
     .then(category => {
         if(!category) {
             return res.status(404).send({
@@ -50,11 +51,11 @@ exports.findAllCategories = (req, res) => {
             message: "Some error occurred while retrieving category details"
         });
     });
-}
+};
 
 //----------------Get category by categoryId------------------->
 exports.findCategoryById = (req, res) => {
-    const category = Category.findById(req.params.categoryId)
+    Category.findById(req.params.categoryId)
     .then(category => {
         if(!category) {
             return res.status(404).send({
@@ -71,4 +72,4 @@ exports.findCategoryById = (req, res) => {
             message: "Some error occurred while retrieving category with categoryId " + req.params.categoryId
         });
     });
-}
+};

@@ -1,22 +1,7 @@
 
 const utils = require('../utils/commonFunctions');
-let multer = require('multer');
-let GridFsStorage = require('multer-gridfs-storage');
-let storage = GridFsStorage({
-    url: utils.getProperty('mongo_connect_url'),
-    file: (req, file) => {
-        return {
-            filename: file.originalname
 
-        }
-    }
-});
-
-let upload = multer({ //multer settings for single upload
-    storage: storage
-}).single('file');
-
-exports.fileUpload = function (req,res) {
+/*exports.fileUpload = function (req,res) {
 
     upload(req,res,function(err){
         if(err){
@@ -29,7 +14,7 @@ exports.fileUpload = function (req,res) {
             utils.generateResponse(utils.getProperty('success'),utils.getProperty('file_saved_code'),utils.getProperty('file_saved'))
         );
     });
-};
+};*/
 
 exports.findFileByName =  function(req,res){
 
@@ -43,7 +28,7 @@ exports.findFileByName =  function(req,res){
         let readstream = utils.getGfs().createReadStream({
             filename: files[0].filename
         });
-        res.set('Content-Type', files[0].contentType)
+        res.set('Content-Type', files[0].contentType);
         return readstream.pipe(res);
     });
 };
@@ -71,18 +56,10 @@ exports.getAllFiles = function(req,res){
     });
 };
 
-exports.checkDuplicate = function(req,res){
-    let options = {
-        filename: req.headers.filename
-    };
-    utils.getGfs().exist(options, function (err, found) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        console.log(found);
-        found ? exports.removeFile(req,res,req.headers.filename) : exports.fileUpload(req,res);
-    });
+exports.fileUpload = function(req,res){
+    res.json(
+        utils.generateResponse(utils.getProperty('success'),utils.getProperty('file_saved_code'),utils.getProperty('file_saved'))
+    );
 };
 
 exports.removeFile = function (req,res,filename){

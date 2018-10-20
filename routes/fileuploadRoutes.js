@@ -8,6 +8,7 @@ const multer = require('multer');
 
 const storage = GridFsStorage({
     url: utils.getProperty('mongo_connect_url'),
+    cache: true,
     file: (req, file) => {
         return {
             filename: file.originalname

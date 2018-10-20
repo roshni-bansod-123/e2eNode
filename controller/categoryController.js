@@ -34,17 +34,18 @@ exports.createCategory = (req, res) => {
 
 //------------------Get category details--------------------->
 exports.findAllCategories = (req, res) => {
-    Category.find()
+
+    let cat = Utils.getConnection().model('Category',Category,'categories_collection');
+    cat.find()
     .then(category => {
         if(!category) {
             return res.status(404).send({
                 message: "Category details not found"
             });            
         }
-        res.status(200).json({
-            errorCode: Utils.getProperty('success'),
-            categoryDetails: category
-        });
+        res.status(200).json(
+            category
+        );
     })
     .catch(err => {
         return res.status(500).send({

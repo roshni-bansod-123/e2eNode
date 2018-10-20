@@ -29,3 +29,19 @@ exports.getAllContacts = (req,res) => {
     })
 };
 
+exports.changeStatus = (req,res) => {
+    let modelData = utils.getConnection().model('Contact_Us',Contactus);
+    console.log(req.body._id);
+    modelData.findByIdAndUpdate(req.body._id,{ $set: { status: 'Close' }},function(err,status){
+        if(err){
+            return res.send(
+                utils.generateResponse(utils.getProperty("failure"), utils.getProperty("status_failed_code"),utils.getProperty("status_failed"))
+            );
+        }
+        return res.status(200).send(
+            utils.generateResponse(utils.getProperty("success"), utils.getProperty("status_changed_code"),utils.getProperty("status_changed"))
+        );
+
+    })
+};
+

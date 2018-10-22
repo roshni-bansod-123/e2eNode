@@ -17,14 +17,13 @@ exports.createCategory = (req, res) => {
         categoryId: new mongoose.Types.ObjectId,
         category: req.body.category,
         createdDate: new Date,
-        categoryImage: req.file.path
+        categoryImage: req.file.id
       });
       category 
       .save()
-      .then(result => res.status(200).json({
-        errorCode: Utils.getProperty('success'),
-        categoryDetails: category
-    }))
+      .then(result => res.status(200).send(
+          Utils.getProperty("success")
+      ))
       .catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while creating category."

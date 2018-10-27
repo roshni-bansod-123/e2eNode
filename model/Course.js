@@ -1,33 +1,26 @@
 const mongoose = require('mongoose');
-
+const Feature = require('./Features');
+const Benefits = require('./Benefits');
+const Reviews = require('./Reviews');
 const courseSchema = new mongoose.Schema({
     courseId : String,
     courseName : String,
-    categoryId	: {
-       type : String,
-       ref : 'categoryId'
+    type	    : Array,
+    createdDate	: {
+        type: Date,
+        default: Date.now()
     },
-    createdDate	: Date,
-    updateddate	: Date,
+    updatedDate	: Date,
     aboutCourse	: String,
     courseImage	: String,
     courseContent : String,	
     duration : String,
-    feautures : {
-        instructorLedSessions : String,
-        realLifeCaseStudies : String,
-        assignments : String,
-        certification : String,
-        support : String 
-    },
-    benefits : {
-        name : String,
-        benefit : [{
-            type : String
-        }]
-    }
+    features : Feature,
+    benefits : Benefits,
+    reviews: Reviews
 
 });
 
-const Course = mongoose.model('Course',courseSchema,'courses_collection');
+//const Course = mongoose.model('Course',courseSchema,'courses_collection');
+const Course = courseSchema
 module.exports  = Course;

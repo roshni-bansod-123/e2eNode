@@ -57,6 +57,7 @@ exports.getAllFiles = function(req,res){
 };
 
 exports.fileUpload = function(req,res){
+    console.log(req.file.id);
     res.json(
         utils.generateResponse(utils.getProperty('success'),utils.getProperty('file_saved_code'),utils.getProperty('file_saved'))
     );

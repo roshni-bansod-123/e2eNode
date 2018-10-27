@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 const categorySchema = new mongoose.Schema({
     categoryId : mongoose.Schema.Types.ObjectId,
     category : String,
-    createdDate : Date,
+    createdDate : {
+        type: Date,
+        default: Date.now()
+    },
     updatedDate : Date,
     categoryImage : String
 

@@ -86,10 +86,40 @@ exports.addCourse = (req,res) => {
     input.save(function(error){
         if(error){
             console.log(error.errors);
-            return res.send(Utils.generateResponse(Utils.getProperty("failure"), Utils.getProperty("add_course_failed_code"),Utils.getProperty("add_course_failed")));
+            return res.send(
+                Utils.generateResponse(Utils.getProperty("failure"), Utils.getProperty("add_course_failed_code"),Utils.getProperty("add_course_failed"))
+            );
         }else{
-            res.status(200).send(Utils.getProperty("success"));
+            res.status(200).send(
+                Utils.getProperty("success")
+            );
         }
     });
+};
+
+
+
+
+//----------------------Delete Course----------------------------->
+exports.deleteCourse = (req,res) => {
+    const course = Utils.getConnection().model('Course',Course,'courses_collection');
+    course.findByIdAndDelete(req.params.courseId)
+        .then(course => {
+            if(!course) {
+                return res.status(404).send(
+                    Utils.generateResponse(Utils.getProperty("failure"), Utils.getProperty("delete_course_failed_code"),Utils.getProperty("delete_course_failed"))
+
+                );
+            }
+            res.status(200).send(
+                Utils.generateResponse(Utils.getProperty("success"), Utils.getProperty("delete_course_success_code"),Utils.getProperty("delete_course_success"))
+            );
+        })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).send(
+                Utils.generateResponse(Utils.getProperty("failure"), Utils.getProperty("delete_course_failed_code"),Utils.getProperty("delete_course_failed"))
+            );
+        });
 };
 

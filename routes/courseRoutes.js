@@ -32,4 +32,6 @@ router.get('/course/:courseId',courseController.findCourseById);
 
 router.post('/course/addCourse',upload.single('courseImage'),courseController.checkCourseState);
 
+router.delete('/course/:courseId',courseController.deleteCourse);
+
 module.exports = router;

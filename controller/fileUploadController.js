@@ -1,5 +1,6 @@
 
 const utils = require('../utils/commonFunctions');
+const mongoose = require('mongoose');
 
 /*exports.fileUpload = function (req,res) {
 
@@ -18,25 +19,27 @@ const utils = require('../utils/commonFunctions');
 
 exports.findFileByName =  function(req,res){
 
-    utils.getGfs().files.find({filename: req.params.filename}).toArray(function(err, files){
+    let monId =  mongoose.Types.ObjectId(req.params.filename);
+    utils.getGfs().collection(req.params.source);
+    utils.getGfs().files.find({"_id": monId}).toArray(function(err, files){
         if(!files || files.length === 0){
             return res.status(404).json(
                 utils.generateResponse(utils.getProperty('failure'),utils.getProperty('file_not_found_code'),utils.getProperty('file_not_found'))
             );
         }
-        /** create read stream */
         let readstream = utils.getGfs().createReadStream({
             filename: files[0].filename
         });
         res.set('Content-Type', files[0].contentType);
         return readstream.pipe(res);
     });
+
 };
 
 exports.getAllFiles = function(req,res){
     let filesData = [];
     let count = 0;
-
+    utils.getGfs().collection(req.params.source);
     utils.getGfs().files.find({}).toArray((err, files) => {
         // Error checking
         if(!files || files.length === 0){
@@ -47,7 +50,7 @@ exports.getAllFiles = function(req,res){
         // Loop through all the files and fetch the necessary information
         files.forEach((file) => {
             filesData[count++] = {
-                originalname: file.originalname,
+                fileId: file._id,
                 filename: file.filename,
                 contentType: file.contentType
             }

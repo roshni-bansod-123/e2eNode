@@ -53,6 +53,9 @@ exports.checkCourseState = (req,res) => {
     }else{
         let data = JSON.parse(req.body.courseData);
 
+        if(req.file.id != null){
+            data.courseImage = req.file.id;
+        }
         course.findByIdAndUpdate(courseId,{$set:data})
             .then(course => {
                 if(!course) {

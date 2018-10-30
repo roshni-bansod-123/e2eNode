@@ -11,7 +11,8 @@ const storage = GridFsStorage({
     cache: true,
     file: (req, file) => {
         return {
-            filename: file.originalname
+            filename: file.originalname,
+            bucketName: 'banners'
 
         }
     }
@@ -51,8 +52,8 @@ const upload = multer({storage: storage,fileFilter: fileFilter});
 router.post('/upload',upload.single('file'),fileUploadController.fileUpload);
 
 //----------------- find file by name ------------------>
-router.get('/:filename',fileUploadController.findFileByName);
+router.get('/:filename/:source',fileUploadController.findFileByName);
 
-router.get('/get/allfiles',fileUploadController.getAllFiles);
+router.get('/get/allfiles/:source',fileUploadController.getAllFiles);
 
 module.exports = router;

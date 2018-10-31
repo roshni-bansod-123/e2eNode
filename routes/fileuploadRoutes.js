@@ -21,9 +21,9 @@ const storage = GridFsStorage({
 const fileFilter = (req,file,cb) => {
 
     let options = {
-        filename:file.originalname
+        filename:file.originalname,
+        root: 'banners',
     };
-
     utils.getGfs().exist(options, function (err, found) {
         if (err) {
             console.log(err);
@@ -35,7 +35,10 @@ const fileFilter = (req,file,cb) => {
 };
 
 const removeFile = function(filename,cb) {
-    utils.getGfs().remove({ filename: filename }, (err) => {
+    utils.getGfs().collection('banners');
+    utils.getGfs().remove({ filename: filename,
+        root: 'banners',
+    }, (err) => {
         if (err){
             res.status(500).send(
                 utils.generateResponse(utils.getProperty('failure'),utils.getProperty('file_delete_fail_code'),utils.getProperty('file_delete_fail'))

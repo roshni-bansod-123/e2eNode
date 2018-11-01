@@ -31,6 +31,9 @@ app.use('/contactusroutes',ContactusRoutes);
 const FileUploadRoutes = require('./routes/fileuploadRoutes');
 app.use('/file',FileUploadRoutes);
 
+const BatchRoutes = require('./routes/batchRoutes');
+app.use('/batch',BatchRoutes);
+
 // ----------------- mongoDb connection -------------------->
 
 utils.createDBConnection();

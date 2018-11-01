@@ -12,7 +12,7 @@ const storage = GridFsStorage({
     file: (req, file) => {
         return {
             filename: file.originalname,
-            bucketName: 'banners'
+            bucketName: req.body.bucketName
 
         }
     }
@@ -22,7 +22,7 @@ const fileFilter = (req,file,cb) => {
 
     let options = {
         filename:file.originalname,
-        root: 'banners',
+        root:  req.body.bucketName
     };
     utils.getGfs().exist(options, function (err, found) {
         if (err) {
@@ -30,14 +30,14 @@ const fileFilter = (req,file,cb) => {
             return;
         }
         console.log(found);
-        found ? removeFile(file.originalname,cb) : cb(null,true);
+        found ? removeFile(req,file.originalname,cb) : cb(null,true);
     });
 };
 
-const removeFile = function(filename,cb) {
-    utils.getGfs().collection('banners');
+const removeFile = function(req,filename,cb) {
+    utils.getGfs().collection( req.body.bucketName);
     utils.getGfs().remove({ filename: filename,
-        root: 'banners',
+        root:  req.body.bucketName
     }, (err) => {
         if (err){
             res.status(500).send(
@@ -52,7 +52,7 @@ const removeFile = function(filename,cb) {
 const upload = multer({storage: storage,fileFilter: fileFilter});
 
 //------------------ upload file ----------------------->
-router.post('/upload',upload.single('file'),fileUploadController.fileUpload);
+router.post('/upload',upload.single('courseContent'),fileUploadController.fileUpload);
 
 //----------------- find file by name ------------------>
 router.get('/:filename/:source',fileUploadController.findFileByName);

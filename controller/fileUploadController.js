@@ -1,7 +1,7 @@
 
 const utils = require('../utils/commonFunctions');
 const mongoose = require('mongoose');
-
+const CourseContent = require('../model/CourseContent');
 /*exports.fileUpload = function (req,res) {
 
     upload(req,res,function(err){
@@ -61,9 +61,23 @@ exports.getAllFiles = function(req,res){
 
 exports.fileUpload = function(req,res){
     console.log(req.file.id);
-    res.json(
-        utils.generateResponse(utils.getProperty('success'),utils.getProperty('file_saved_code'),utils.getProperty('file_saved'))
-    );
+    let cat = utils.getConnection().model('CourseContent',CourseContent,'coursecontent_collection');
+    let input = new cat({
+        courseId : req.body.courseContentId,
+        courseContentFile: req.file.id
+    });
+    input.save(function(error){
+        if(error){
+            console.log(error.errors);
+            return res.send(
+                "Failure"
+            );
+        }else{
+            return res.send(
+                "Success"
+            );
+        }
+    });
 };
 
 exports.removeFile = function (req,res,filename){

@@ -34,9 +34,9 @@ exports.findCourseById = (req,res) => {
                     message: "Course not found with courseId " + req.params.courseId
                 });
             }
-            res.status(200).json({
+            res.status(200).send(
                 course
-            });
+            );
         })
         .catch(err => {
             return res.status(500).send({

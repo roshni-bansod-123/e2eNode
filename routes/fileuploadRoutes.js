@@ -24,6 +24,7 @@ const fileFilter = (req,file,cb) => {
         filename:file.originalname,
         root:  req.body.bucketName
     };
+    utils.getGfs().collection( req.body.bucketName);
     utils.getGfs().exist(options, function (err, found) {
         if (err) {
             console.log(err);

@@ -60,4 +60,6 @@ router.get('/:filename/:source',fileUploadController.findFileByName);
 
 router.get('/get/allfiles/:source',fileUploadController.getAllFiles);
 
+router.delete('/delete/:fileId/:source',fileUploadController.removeFile);
+
 module.exports = router;

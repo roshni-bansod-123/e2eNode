@@ -61,35 +61,51 @@ exports.getAllFiles = function(req,res){
 
 exports.fileUpload = function(req,res){
     console.log(req.file.id);
-    let cat = utils.getConnection().model('CourseContent',CourseContent,'coursecontent_collection');
-    let input = new cat({
-        courseId : req.body.courseContentId,
-        courseContentFile: req.file.id
-    });
-    input.save(function(error){
-        if(error){
-            console.log(error.errors);
-            return res.send(
-                "Failure"
-            );
-        }else{
-            return res.send(
-                "Success"
-            );
-        }
-    });
+    if(!req.body.source){
+        let cat = utils.getConnection().model('CourseContent',CourseContent,'coursecontent_collection');
+        let input = new cat({
+            courseId : req.body.courseContentId,
+            courseContentFile: req.file.id
+        });
+        input.save(function(error){
+            if(error){
+                console.log(error.errors);
+                return res.send(
+                    "Failure"
+                );
+            }else{
+                return res.send(
+                    "Success"
+                );
+            }
+        });
+    }
+
+    res.send(
+        "Success"
+    );
+
+
 };
 
-exports.removeFile = function (req,res,filename){
+exports.removeFile = function (req,res){
 
-    utils.getGfs().remove({ filename: filename }, (err) => {
+    utils.getGfs().collection( req.params.source);
+    let monId =  mongoose.Types.ObjectId(req.params.fileId);
+    utils.getGfs().collection(req.params.source);
+    utils.getGfs().remove({
+        "_id": monId,
+        root: req.params.source
+    }, (err) => {
         if (err){
             res.status(500).send(
                 utils.generateResponse(utils.getProperty('failure'),utils.getProperty('file_delete_fail_code'),utils.getProperty('file_delete_fail'))
             );
             return;
         }
+        res.send(
+            utils.generateResponse(utils.getProperty('success'),utils.getProperty('file_saved_code'),utils.getProperty('file_delete_success'))
+        );
 
-        exports.fileUpload(req,res)
     });
 };

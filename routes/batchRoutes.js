@@ -9,6 +9,7 @@ const batchController = require('../controller/batchController');
 router.get('/get/batches', batchController.getBatches);
 router.post('/add/batch', batchController.addBatch);
 router.delete('/delete/batches/:id', batchController.deleteBatches);
+router.get('/:courseId', batchController.getBatchByCourseId);
 
 
 module.exports = router;

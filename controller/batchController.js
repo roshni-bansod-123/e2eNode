@@ -1,12 +1,12 @@
 const Batches = require('../model/Batches');
 const utils = require('../utils/commonFunctions');
+const mongoose = require('mongoose');
 
 exports.addBatch = (req,res) => {
     let modelData = utils.getConnection().model('Batches',Batches,'batches_collection');
-    if(req.body._id === null){
-        let input = new modelData(req.body);
-        console.log(input);
+    if(req.body._id === null || req.body._id === '' ||  req.body._id === undefined){
 
+        let input = new modelData(req.body);
         input.save(function(error){
             if(error){
                 console.log(error.errors);
@@ -62,6 +62,28 @@ exports.deleteBatches = (req,res) => {
         }
         res.status(200).send(
             utils.generateResponse(utils.getProperty("success"), utils.getProperty("reg_success_code"),utils.getProperty("query_saved"))
+        );
+    })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).send(
+                utils.generateResponse(utils.getProperty("failure"), utils.getProperty("invalid_input_code"),utils.getProperty("invalid_input"))
+            );
+        });
+};
+
+exports.getBatchByCourseId = (req,res) => {
+    let modelData = utils.getConnection().model('Batches',Batches,'batches_collection');
+
+    modelData.find({'courseId':req.params.courseId})
+        .then(batch => {
+        if(!batch) {
+            return res.status(404).send(
+                utils.generateResponse(utils.getProperty("failure"), utils.getProperty("invalid_input_code"),utils.getProperty("invalid_input"))
+            );
+        }
+        res.status(200).send(
+                        batch
         );
     })
         .catch(err => {

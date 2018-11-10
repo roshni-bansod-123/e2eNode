@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Course = require('../model/Course');
 const Utils = require('../utils/commonFunctions');
+const CourseContent = require('../model/CourseContent');
 
 
 //----------------------Get course details-------------------->
@@ -125,4 +126,41 @@ exports.deleteCourse = (req,res) => {
             );
         });
 };
+
+exports.getCourseContent = (req,res) => {
+    let cat = Utils.getConnection().model('CourseContent',CourseContent,'coursecontent_collection');
+    cat.findOne({'courseId':req.params.courseId})
+        .then(course => {
+            if(!course) {
+                return res.status(404).send(
+                    Utils.generateResponse(Utils.getProperty("failure"), Utils.getProperty("delete_course_failed_code"),Utils.getProperty("delete_course_failed"))
+
+                );
+            }
+            exports.findContent(req,res,course.courseContentFile);
+        })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).send(
+                Utils.generateResponse(Utils.getProperty("failure"), Utils.getProperty("delete_course_failed_code"),Utils.getProperty("delete_course_failed"))
+            );
+        });
+};
+
+exports.findContent = (req,res,courseContentFile) => {
+    Utils.getGfs().collection('courseContent');
+    let monId =  mongoose.Types.ObjectId(courseContentFile);
+    Utils.getGfs().files.find({"_id": monId}).toArray(function(err, files){
+        if(!files || files.length === 0){
+            return res.status(404).json(
+                Utils.generateResponse(Utils.getProperty('failure'),Utils.getProperty('file_not_found_code'),Utils.getProperty('file_not_found'))
+            );
+        }
+        let readstream = Utils.getGfs().createReadStream({
+            filename: files[0].filename
+        });
+        res.set('Content-Type', files[0].contentType);
+        return readstream.pipe(res);
+    });
+}
 

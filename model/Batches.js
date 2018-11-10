@@ -5,7 +5,7 @@ const batchSchema = new mongoose.Schema({
     startDate : Date,
     duration : Number,
     courseTime : String,
-    courseId : String,
+    courseId : String
 });
 
 const Batches = batchSchema;

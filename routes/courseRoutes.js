@@ -34,4 +34,6 @@ router.post('/course/addCourse',upload.single('courseImage'),courseController.ch
 
 router.delete('/course/:courseId',courseController.deleteCourse);
 
+router.get('/courseContent/:courseId',courseController.getCourseContent);
+
 module.exports = router;

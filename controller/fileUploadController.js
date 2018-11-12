@@ -74,17 +74,19 @@ exports.fileUpload = function(req,res){
                     "Failure"
                 );
             }else{
-                return res.send(
+                res.send(
                     "Success"
                 );
+                return;
             }
         });
     }
+    else {
 
-    res.send(
-        "Success"
-    );
-
+        res.send(
+            "Success"
+        );
+    }
 
 };
 

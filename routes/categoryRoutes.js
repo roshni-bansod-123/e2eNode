@@ -33,4 +33,9 @@ router.get('/categories',categoryController.findAllCategories);
 //------------------ Get category by id ------------------->
 router.get('/category/:categoryId',categoryController.findCategoryById);
 
+router.post('/updateCategory',categoryController.updateCategoryById);
+
+router.delete('/deleteCategory/:categoryId',categoryController.deleteCategoryById);
+
+
 module.exports = router;

@@ -37,7 +37,8 @@ const fileFilter = (req,file,cb) => {
 
 const removeFile = function(req,filename,cb) {
     utils.getGfs().collection( req.body.bucketName);
-    utils.getGfs().remove({ filename: filename,
+    utils.getGfs().remove({
+        filename: filename,
         root:  req.body.bucketName
     }, (err) => {
         if (err){

@@ -59,26 +59,57 @@ exports.getAllFiles = function(req,res){
     });
 };
 
+exports.removeFileById = function(source,fileId) {
+    utils.getGfs().collection(source);
+    let monId =  mongoose.Types.ObjectId(fileId);
+    utils.getGfs().remove({
+        "_id": monId,
+        root: source
+    });
+
+};
+
 exports.fileUpload = function(req,res){
     console.log(req.file.id);
     if(!req.body.source){
         let cat = utils.getConnection().model('CourseContent',CourseContent,'coursecontent_collection');
-        let input = new cat({
-            courseId : req.body.courseContentId,
-            courseContentFile: req.file.id
-        });
-        input.save(function(error){
-            if(error){
-                console.log(error.errors);
-                return res.send(
-                    "Failure"
-                );
-            }else{
-                res.send(
-                    "Success"
-                );
-                return;
+
+        cat.find({'courseId':req.body.courseContentId},function(err,docs){
+            if(! docs.length > 0) {
+                let input = new cat({
+                    courseId : req.body.courseContentId,
+                    courseContentFile: req.file.id
+                });
+                input.save(function(error){
+                    if(error){
+                        console.log(error.errors);
+                        return res.send(
+                            "Failure"
+                        );
+                    }else{
+                        res.send(
+                            "Success"
+                        );
+                        return;
+                    }
+                });
+            }else {
+                cat.findOneAndUpdate({'courseId':req.body.courseContentId}, {$set: {
+                        courseId : req.body.courseContentId,
+                        courseContentFile: req.file.id
+                    }
+                },null,function (err,docs) {
+                    console.log(docs);
+                    if(err){
+                        res.send('Failure')
+                    }else {
+                        exports.removeFileById('courseContent',docs.courseContentFile);
+                        res.send('Success');
+                    }
+                });
             }
+
+
         });
     }
     else {
@@ -92,7 +123,6 @@ exports.fileUpload = function(req,res){
 
 exports.removeFile = function (req,res){
 
-    utils.getGfs().collection( req.params.source);
     let monId =  mongoose.Types.ObjectId(req.params.fileId);
     utils.getGfs().collection(req.params.source);
     utils.getGfs().remove({
@@ -111,3 +141,4 @@ exports.removeFile = function (req,res){
 
     });
 };
+

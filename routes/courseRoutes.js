@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const utils = require('../utils/commonFunctions');
 let GridFsStorage = require('multer-gridfs-storage');
-const courseController = require('../controller/CourseController');
+const courseController = require('../controller/courseController');
 
 const fileFilter = (req,file,cb) => {
     if(file.mimetype === 'image/png' || file.mimetype === 'image/jpeg'){
